@@ -1,9 +1,6 @@
 package org.example.expert.config.logger;
 
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.MalformedJwtException;
-import io.jsonwebtoken.UnsupportedJwtException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +8,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.example.expert.domain.user.enums.UserRole;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
+
+import java.time.LocalDateTime;
 
 @Slf4j
 @Component
@@ -45,6 +44,12 @@ public class LoggerInterceptor implements HandlerInterceptor {
                 return false;
             }
         }
+        String query = request.getQueryString();
+        String fullUrl = url + (query != null ? "?" + query : "");
+        LocalDateTime requestTime = LocalDateTime.now();
+
+        log.info("Interceptor 요청 URL: {}", fullUrl);
+        log.info("Interceptor 요청 시각: {}", requestTime);
         return true;
     }
 
